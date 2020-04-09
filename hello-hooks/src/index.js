@@ -4,6 +4,11 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
+let  express = require('express');
+let app = express();
+app.use(express.static(__dirname + '/public'));
+app.listen(8000);
+
 ReactDOM.render(
   <React.StrictMode>
     <App />
