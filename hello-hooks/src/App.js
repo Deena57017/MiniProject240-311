@@ -1,95 +1,60 @@
-import React, { useReducer, useEffect } from 'react';
-import axios from 'axios';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import home from './components/home';
+import productslists from './components/productslists';
+import productsinfo from './components/productsinfo';
+import productsadd from './components/productsadd';
+import productsedit from './components/productsedit';
 
-const fetchCat = () => axios.get('https://aws.random.cat/meow');
-
-const initialState = {
-  isFetching: false,
-  cat: {},
-  count: 0
-}
-
-const reducer = (state, { type, payload }) => {
-  switch(type) {
-    case 'FETCH_CAT_PENDING':
-      return {
-        ...state,
-        isFetching: true
-      }
-    case 'FETCH_CAT_SUCCESS':
-      return {
-        ...state,
-        isFetching: false,
-        cat: payload
-      }
-    case 'COUNTER_CLICK':
-      return {
-        ...state,
-        isFetching: false,
-        count: payload
-      }
-    default:
-      return state
-  }
-}
-
-const App = () => {
-  const [{ cat, isFetching, count }, dispatch] = useReducer(reducer, initialState);
-
-  useEffect(() => {
-    dispatch({
-      type: 'FETCH_CAT_PENDING'
-    })
-
-    fetchCat().then(response => {
-      dispatch({
-        type: 'FETCH_CAT_SUCCESS',
-        payload: response.data
-      })
-    })
-
-  }, []);
-
-  if (isFetching) {
-    return <p>Loading....</p>
-  }
-
+function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-
-        <p>
-        You click {count} times
-        </p>
-
-        <button
-          style={{
-            padding: '8px 16px',
-            borderRadius: 4,
-            fontSize: '1.25rem'
-          }}
-          onClick={() => {
-            dispatch({
-              type: 'COUNTER_CLICK',
-              payload: count + 1
-            })
-          }}
-        >
-          Click me
-        </button>
-
-        <p>
-          <img src={cat && cat.file} alt="Cat" width="256" />
-        </p>
-
-      </header>
+    <div>
+      <BrowserRouter>
+        <MainMenu />
+        <div class="container">
+          <MainRoute />
+        </div>
+      </BrowserRouter>
     </div>
+  );
+}
+
+function MainMenu() {
+  return (
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+      <a class="navbar-brand" href="/">Thaivb.NET</a>
+      <button class="navbar-toggler" type="button"
+        data-toggle="collapse"
+        data-target="#MainMenu"
+        aria-controls="MainMenu"
+        aria-expanded="false"
+        aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="MainMenu">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/productslists">รายการสินค้าทั้งหมด</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  );
+}
+
+function MainRoute() {
+  return (
+    <Switch>
+      <Route exact path="/" component={home} />
+      <Route exact path="/productslists" component={productslists} />      
+      <Route exact path="/products/:id" component={productsinfo} />
+      <Route exact path="/productsadd" component={productsadd} />
+      <Route exact path="/productsedit/:id" component={productsedit} />
+    </Switch>
   );
 }
 
